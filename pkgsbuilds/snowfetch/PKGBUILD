@@ -1,0 +1,38 @@
+# Maintainer: Snow Sky
+
+pkgname=snowfetch
+pkgver=1.1.2
+pkgrel=1
+pkgdesc="A simple fetch written in Python with darkarch support"
+arch=('any')
+url="https://github.com/SnowsSky/snowfetch"
+license=('MIT')
+
+depends=('python')
+makedepends=()
+
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/refs/tags/${pkgver}.tar.gz")
+sha256sums=('b94ee6b058e1e28368f19247a92e1ce609a14e8c44dc24799870174265dcc1d1')
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    # Conversion si nécessaire (au cas où fichiers Windows)
+    find . -type f -name "*.py" -exec sed -i 's/\r$//' {} +
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+
+    # Script principal
+    install -Dm755 snowfetch.py "$pkgdir/usr/bin/snowfetch"
+
+    # Installation dans /usr/local/lib/snowfetch
+    install -dm755 "$pkgdir/usr/local/lib/snowfetch/logo"
+
+    install -Dm644 versions.json \
+        "$pkgdir/usr/local/lib/snowfetch/versions.json"
+
+    cp -r logo/* \
+        "$pkgdir/usr/local/lib/snowfetch/logo/"
+}
+
