@@ -1,0 +1,25 @@
+# Maintainer: Snow Sky
+pkgname=darkarchinstall
+pkgver=v1.0.0
+pkgrel=4
+pkgdesc="Dark Arch installer script"
+url="https://github.com/SnowsSky/darkarchinstall"
+arch=('any')
+license=('MIT')
+depends=('pacman' 'curl')
+optdepends=('sudo: privilege elevation')
+makedepends=('go')
+source=("${pkgname}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz")
+sha256sums=('46a9bd447967c5a338c0dca8e1916363cf5025137d3d4d0a81a8f1617dc78c8a')
+
+build() {
+    cd "$srcdir/${pkgname}-${pkgver#v}"
+    go build -o $pkgname
+}
+
+package() {
+    cd "$srcdir/${pkgname}-${pkgver#v}"
+
+    install -Dm755 $pkgname "$pkgdir/usr/bin/$pkgname"
+    install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
